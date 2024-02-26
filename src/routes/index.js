@@ -5,8 +5,6 @@ const router = Router();
 
 const jwt = require('jsonwebtoken');
 
-router.get('/', (req, res) => {res.send('Hello World')});
-
 router.post('/signup', async (req, res) => {
     const {name, lastname, email, password} = (req.body); // recibir los datos que se envian desde el front
     console.log(email, password);
