@@ -34,10 +34,8 @@ router.post('/signin', async (req, res) => {// crear un nuevo usuario en la base
 
 //destruccion del token
 router.post('/signout', (req, res) => {
-   res.clearCookie('token').sendStatus(200);
-
+  res.clearCookie('token').json({message: 'Session closed successfully'});
 });
-
 
 
 router.get('/profile', verifyToken, (req, res) => {
