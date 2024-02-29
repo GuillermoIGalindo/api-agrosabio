@@ -59,6 +59,23 @@ router.post('/signout', (req, res) => {
   res.clearCookie('token').json({message: 'Sesión cerrada correctamente'});
 });
 
+
+//ruta para validar el correo
+router.post('/checkEmail', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      res.status(200).json({ message: 'El correo existe' });
+    } else {
+      res.status(404).json({ message: 'El correo no existe' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al buscar el correo' });
+  }
+});
+
 //actualizar la contraseña si se perdio
 router.post('/updatePassword', async (req, res) => {
   const { email, newPassword } = req.body; // Asumiendo que el cuerpo de la solicitud contiene el correo electrónico y la nueva contraseña
