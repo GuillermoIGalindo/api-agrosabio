@@ -2,40 +2,92 @@ const {Router} = require('express');
 const User = require('../models/User');
 const router = Router();
 
-
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const saltRounds = 10;
 
+//registrar usuario
 router.post('/signup', async (req, res) => {
-    const {name, lastname, email, password} = (req.body); // recibir los datos que se envian desde el front
-    console.log(email, password);
+  const { name, lastname, email, password } = req.body;
 
-    const newUser = new User({name, lastname, email, password}); // crear un nuevo usuario en la base de datos
-    await newUser.save(); // guardar el nuevo usuario
+  try {
+      // Verificar si ya existe un usuario con el mismo correo electrónico
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+          return res.status(400).send('El usuario ya existe con ese correo electrónico.');
+      }
 
-    const token = jwt.sign({_id: newUser._id}, 'secretkey'); // crear un token para el usuario
-    res.status(200).json({token}); // enviar el token al front
+      // Hashear la contraseña antes de guardarla en la base de datos
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    console.log(newUser);
+      const newUser = new User({ name, lastname, email, password: hashedPassword });
+      await newUser.save();
+
+      const token = jwt.sign({ _id: newUser._id }, 'secretkey');
+      res.status(201).json({ token });
+  } catch (error) {
+      res.status(500).json({ error: 'Error al registrar el usuario' });
+  }
 });
 
-router.post('/signin', async (req, res) => {// crear un nuevo usuario en la base de datos
+//iniciar sesión
+router.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
 
-    const {email, password} = (req.body); // recibir los datos del usuario 
+  try {
+      const user = await User.findOne({ email });
+      if (!user) {
+          return res.status(401).send("El correo no existe");
+      }
 
-    const user = await User.findOne({email}); // buscar el usuario  por correo en la base de datos
-    if (!user) return res.status(401).send("El correo no existe");
-    if (user.password !== password) return res.status(401).send("Contraseña incorrecta");
+      // Comparar la contraseña enviada con la contraseña hasheada almacenada
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+          return res.status(401).send("Contraseña incorrecta");
+      }
 
-    const token = jwt.sign({_id: user._id}, 'secretkey'); // crear un token para el usuario
-    //return res.status(200).json({token}); // enviar el token al front
-    res.cookie('token', token, {httpOnly: true});
-    return res.status(200).json({token});
-}); 
+      const token = jwt.sign({ _id: user._id }, 'secretkey');
+      res.cookie('token', token, { httpOnly: true });
+      return res.status(200).json({ token });
+  } catch (error) {
+      res.status(500).json({ error: 'Error al iniciar sesión' });
+  }
+});
 
 //destruccion del token
 router.post('/signout', (req, res) => {
-  res.clearCookie('token').json({message: 'Session closed successfully'});
+  res.clearCookie('token').json({message: 'Sesión cerrada correctamente'});
 });
+
+//actualizar la contraseña si se perdio
+router.post('/updatePassword', async (req, res) => {
+  const { email, newPassword } = req.body; // Asumiendo que el cuerpo de la solicitud contiene el correo electrónico y la nueva contraseña
+
+  try {
+    // Buscar al usuario por su correo electrónico
+    const user = await User.findOne({ email });
+
+    // Si no se encuentra el usuario, enviar un mensaje de error
+    if (!user) {
+      return res.status(404).send('Usuario no encontrado con ese correo electrónico.');
+    }
+
+    // Si se encuentra el usuario, actualizar su contraseña
+    // Aquí deberías hashear la contraseña antes de guardarla, por ejemplo, usando bcrypt
+    const saltRounds = 10; // Número de rondas de sal para el hashing
+
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    user.password = hashedPassword; // Actualizar la contraseña hasheada del usuario
+    await user.save(); // Guardar el usuario actualizado en la base de datos
+
+    // Enviar una respuesta exitosa
+    res.status(200).send('Contraseña actualizada correctamente.');
+  } catch (error) {
+    // Manejar cualquier otro error
+    res.status(500).json({ error: 'Error al actualizar la contraseña' });
+  }
+});
+
 
 
 router.get('/profile', verifyToken, (req, res) => {
