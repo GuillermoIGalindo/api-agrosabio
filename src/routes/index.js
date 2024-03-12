@@ -1,5 +1,6 @@
-const {Router} = require('express');
+/*const {Router} = require('express');
 const User = require('../models/User');
+const Role = require('../models/Role');
 const router = Router();
 
 const bcrypt = require('bcrypt');
@@ -7,28 +8,33 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 //registrar usuario
+//router.post('/signup', conotroller.signup){}
 router.post('/signup', async (req, res) => {
-  const { name, lastname, email, password } = req.body;
+  const { name, lastname, email, password, roleName } = req.body;
 
   try {
-      // Verificar si ya existe un usuario con el mismo correo electrónico
       const existingUser = await User.findOne({ email });
       if (existingUser) {
           return res.status(400).send('El usuario ya existe con ese correo electrónico.');
       }
 
-      // Hashear la contraseña antes de guardarla en la base de datos
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const role = await Role.findOne({ name: roleName }); // Encuentra el rol por el nombre
+      if (!role) {
+          return res.status(400).send('Rol no válido.');
+      }
 
-      const newUser = new User({ name, lastname, email, password: hashedPassword });
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const newUser = new User({ name, lastname, email, password: hashedPassword, role: role._id });
       await newUser.save();
 
-      const token = jwt.sign({ _id: newUser._id }, 'secretkey');
+      const token = jwt.sign({ _id: newUser._id, role: role.name }, 'secretkey'); // Opcional: incluir información del rol en el token
       res.status(201).json({ token });
-  } catch (error) {
-      res.status(500).json({ error: 'Error al registrar el usuario' });
+    } catch (error) {
+      console.error(error); // Esto te mostrará el error específico en la consola
+      res.status(500).json({ error: 'Error al registrar el usuario', details: error.message }); // Agregar 'details' puede ayudarte a diagnosticar
   }
 });
+
 
 //iniciar sesión
 router.post('/signin', async (req, res) => {
@@ -153,3 +159,4 @@ module.exports = router;
 
 
 
+*/

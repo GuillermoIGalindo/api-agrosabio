@@ -1,0 +1,27 @@
+2024-03-12 13:59:00 [32minfo[39m: Conectado a la base de datos
+2024-03-12 13:59:39 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:00:08 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:00:08 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:02:17 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:02:17 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:04:25 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:04:25 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:04:33 [33mwarn[39m: Intento de registro con correo existente: juan.perez@example.com
+2024-03-12 14:04:45 [33mwarn[39m: Intento de registro con correo existente: juan.perez@example.com
+2024-03-12 14:04:51 [32minfo[39m: Inicio de sesión exitoso: juan.perez@example.com
+2024-03-12 14:09:14 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:09:14 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:09:28 [32minfo[39m: Inicio de sesión exitoso: juan.perez@example.com
+2024-03-12 14:10:39 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:10:39 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:10:54 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:10:54 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:11:01 [32minfo[39m: Inicio de sesión exitoso: juan.perez@example.com
+2024-03-12 14:12:01 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:12:01 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:12:06 [32minfo[39m: Inicio de sesión exitoso: juan.perez@example.com
+2024-03-12 14:12:16 [32minfo[39m: Sesión cerrada correctamente
+2024-03-12 14:12:45 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 14:12:45 [32minfo[39m: Conectado a la base de datos
+2024-03-12 14:12:50 [32minfo[39m: Inicio de sesión exitoso: juan.perez@example.com
+2024-03-12 14:13:00 [32minfo[39m: Sesión cerrada correctamente
