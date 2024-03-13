@@ -38,7 +38,8 @@ exports.signin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email });
+        // Asume que el modelo User ya tiene una referencia al modelo Role
+        const user = await User.findOne({ email }).populate('role');
         if (!user) {
             logger.warn(`Intento de inicio de sesión con correo no existente: ${email}`);
             return res.status(401).send("El correo no existe");
@@ -50,15 +51,19 @@ exports.signin = async (req, res) => {
             return res.status(401).send("Contraseña incorrecta");
         }
 
-        const token = jwt.sign({ _id: user._id }, 'secretkey');
+        // Genera el token sin incluir el rol dentro del token
+        const token = jwt.sign({ _id: user._id }, 'secretkey', { expiresIn: '1h' });
+
         logger.info(`Inicio de sesión exitoso: ${email}`);
-        res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ token });
+
+        // Envía el token y el rol como campos separados en la respuesta
+        res.status(200).json({ token: token, role: user.role.name });
     } catch (error) {
         logger.error(`Error al iniciar sesión: ${error.message}`);
         res.status(500).json({ error: 'Error al iniciar sesión', details: error.message });
     }
 };
+
 
 exports.signout = (req, res) => {
     res.clearCookie('token').json({message: 'Sesión cerrada correctamente'});
