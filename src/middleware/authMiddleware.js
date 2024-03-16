@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const logger = require('../config/logger'); // Asegúrate de que la ruta al logger sea correcta
+const logger = require('../config/logger'); 
 
 // Middleware para verificar el token
 exports.verifyToken = (req, res, next) => {
@@ -25,7 +25,7 @@ exports.verifyToken = (req, res, next) => {
     }
 };
 
-// Middleware opcional para roles
+// Middleware para roles
 exports.verifyRole = roles => (req, res, next) => {
     if (req.user && roles.includes(req.user.role)) {
         logger.info(`Acceso autorizado para el usuario: ${req.user._id} con rol: ${req.user.role}`);

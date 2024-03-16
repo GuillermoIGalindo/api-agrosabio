@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const connectDB = require('./config/db'); // Actualizado para usar la configuración modularizada de la DB
-const userRoutes = require('./routes/userRoutes'); // Usando el nuevo sistema de rutas
+const connectDB = require('./config/db'); 
+const userRoutes = require('./routes/userRoutes'); 
 const Role = require('./models/Role');
 const logger = require('./config/logger');
 
-// Conexión a la base de datos
+
 connectDB();
 
 // Inicialización de roles si no existen
@@ -22,7 +22,6 @@ async function initialSetup() {
         logger.error('Error al inicializar roles: ' + error.message);
     }
 }
-
 initialSetup();
 
 app.use(cors());
