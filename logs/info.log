@@ -25,3 +25,16 @@
 2024-03-12 14:12:45 [32minfo[39m: Conectado a la base de datos
 2024-03-12 14:12:50 [32minfo[39m: Inicio de sesión exitoso: juan.perez@example.com
 2024-03-12 14:13:00 [32minfo[39m: Sesión cerrada correctamente
+2024-03-12 17:43:54 [32minfo[39m: Servidor en el puerto 3000
+2024-03-12 17:43:54 [32minfo[39m: Conectado a la base de datos
+2024-03-12 17:44:20 [32minfo[39m: Inicio de sesión exitoso: juan.perez@example.com
+2024-03-12 17:55:40 [33mwarn[39m: Intento de inicio de sesión con contraseña incorrecta: juan.perez@example.com
+2024-03-12 17:57:55 [33mwarn[39m: Intento de registro con correo existente: juan.perez@example.com
+2024-03-12 17:58:02 [32minfo[39m: Nuevo usuario registrado: memo.perez@example.com
+2024-03-12 17:58:18 [32minfo[39m: Sesión cerrada correctamente
+2024-03-12 17:58:33 [32minfo[39m: Inicio de sesión exitoso: memo.perez@example.com
+2024-03-12 17:58:40 [32minfo[39m: Sesión cerrada correctamente
+2024-03-12 17:59:20 [32minfo[39m: Sesión cerrada correctamente
+2024-03-12 17:59:39 [32minfo[39m: Nuevo usuario registrado: jair.perez@example.com
+2024-03-12 17:59:50 [32minfo[39m: Sesión cerrada correctamente
+2024-03-12 18:00:12 [32minfo[39m: Inicio de sesión exitoso: jair.perez@example.com

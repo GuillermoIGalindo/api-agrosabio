@@ -2,34 +2,34 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Role = require('../models/Role');
-const logger = require('../config/logger'); // Asegúrate de que la ruta al logger sea correcta
+const logger = require('../config/logger'); 
 const saltRounds = 10;
 
 exports.signup = async (req, res) => {
-    const { name, lastname, email, password, roleName } = req.body;
+    const { email, password, roleName } = req.body; 
 
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            logger.warn(`Intento de registro con correo existente: ${email}`);
+            logger.warn(`Intento de registro con correo existente`);
             return res.status(400).send('El usuario ya existe con ese correo electrónico.');
         }
 
         const role = await Role.findOne({ name: roleName });
         if (!role) {
-            logger.warn(`Intento de registro con rol no válido: ${roleName}`);
+            logger.warn(`Intento de registro con rol no válido`);
             return res.status(400).send('Rol no válido.');
         }
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        const newUser = new User({ name, lastname, email, password: hashedPassword, role: role._id });
+        const newUser = new User({ email, password: hashedPassword, role: role._id }); // Se quitan el nombre y apellido
         await newUser.save();
 
+        logger.info(`Nuevo usuario registrado`);
         const token = jwt.sign({ _id: newUser._id, role: role.name }, 'secretkey');
-        logger.info(`Nuevo usuario registrado: ${email}`);
         res.status(201).json({ token });
     } catch (error) {
-        logger.error(`Error al registrar el usuario: ${error.message}`);
+        logger.error(`Error al registrar usuario`);
         res.status(500).json({ error: 'Error al registrar el usuario', details: error.message });
     }
 };
@@ -38,51 +38,45 @@ exports.signin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Asume que el modelo User ya tiene una referencia al modelo Role
         const user = await User.findOne({ email }).populate('role');
         if (!user) {
-            logger.warn(`Intento de inicio de sesión con correo no existente: ${email}`);
+            logger.warn(`Intento de inicio de sesión con correo no existente`);
             return res.status(401).send("El correo no existe");
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            logger.warn(`Intento de inicio de sesión con contraseña incorrecta: ${email}`);
+            logger.warn(`Intento de inicio de sesión con contraseña incorrecta`);
             return res.status(401).send("Contraseña incorrecta");
         }
 
-        // Genera el token sin incluir el rol dentro del token
         const token = jwt.sign({ _id: user._id }, 'secretkey', { expiresIn: '1h' });
 
-        logger.info(`Inicio de sesión exitoso: ${email}`);
-
-        // Envía el token y el rol como campos separados en la respuesta
+        logger.info(`Inicio de sesión exitoso`);
         res.status(200).json({ token: token, role: user.role.name });
     } catch (error) {
-        logger.error(`Error al iniciar sesión: ${error.message}`);
+        logger.error(`Error al iniciar sesión`);
         res.status(500).json({ error: 'Error al iniciar sesión', details: error.message });
     }
 };
 
-
 exports.signout = (req, res) => {
+    logger.info(`Sesión cerrada correctamente`);
     res.clearCookie('token').json({message: 'Sesión cerrada correctamente'});
 };
 
 exports.checkEmail = async (req, res) => {
-    const { email } = req.body;
-
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: req.body.email });
         if (user) {
-            logger.info(`Verificación de correo existente: ${email}`);
+            logger.info(`Verificación de correo existente`);
             res.status(200).json({ message: 'El correo existe' });
         } else {
-            logger.info(`Verificación de correo no existente: ${email}`);
+            logger.info(`Verificación de correo no existente`);
             res.status(404).json({ message: 'El correo no existe' });
         }
     } catch (error) {
-        logger.error(`Error al buscar el correo: ${error.message}`);
+        logger.error(`Error al buscar el correo`);
         res.status(500).json({ error: 'Error al buscar el correo', details: error.message });
     }
 };
@@ -93,7 +87,7 @@ exports.updatePassword = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            logger.warn(`Intento de actualizar contraseña para correo no encontrado: ${email}`);
+            logger.warn(`Intento de actualizar contraseña para correo no encontrado`);
             return res.status(404).send('Usuario no encontrado con ese correo electrónico.');
         }
 
@@ -101,10 +95,10 @@ exports.updatePassword = async (req, res) => {
         user.password = hashedPassword;
         await user.save();
 
-        logger.info(`Contraseña actualizada correctamente para: ${email}`);
+        logger.info(`Contraseña actualizada correctamente`);
         res.status(200).send('Contraseña actualizada correctamente.');
     } catch (error) {
-        logger.error(`Error al actualizar la contraseña: ${error.message}`);
+        logger.error(`Error al actualizar la contraseña`);
         res.status(500).json({ error: 'Error al actualizar la contraseña', details: error.message });
     }
 };
