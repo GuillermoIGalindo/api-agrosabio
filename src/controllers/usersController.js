@@ -102,3 +102,14 @@ exports.updatePassword = async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar la contraseña', details: error.message });
     }
 };
+
+
+// Función para obtener todos los usuarios
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find(); // Encuentra todos los usuarios
+        res.json(users); // Envía la lista de usuarios como respuesta
+    } catch (error) {
+        res.status(500).json({ message: error.message }); // Manejo de errores
+    }
+};
