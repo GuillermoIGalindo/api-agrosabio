@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes'); 
 const Role = require('./models/Role');
 const logger = require('./config/logger');
+const corsOptions = require('./config/corsOptions');
 
 
 connectDB();
@@ -24,7 +25,7 @@ async function initialSetup() {
 }
 initialSetup();
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json()); // Para que entienda los datos que le enviamos en formato de JSON
 
 // Uso de rutas
