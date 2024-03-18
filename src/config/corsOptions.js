@@ -5,7 +5,7 @@ const corsOptions = {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Origen no permitido por CORS'));
+      callback(new Error('Origen no permitido por el CORS'));
     }
   }
 };
