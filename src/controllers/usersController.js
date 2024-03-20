@@ -113,6 +113,19 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
+exports.getUser = async (req, res) => { 
+try {
+    const user = await User.findById(req.params.id); // Encuentra el usuario por su id
+    if(!user){
+        return res.status(404).json({message: "Usuario no encontrado"});
+    }
+    res.json(user); // Envía el usuario como respuesta
+} catch (error) {
+    res.status(500).json({ message: error.message });
+}
+
+};
+
 exports.updateUser = async (req, res) => {
     //obtener el usuario y lso datos del cuerpo de solicitud
     const {id} = req.params;
