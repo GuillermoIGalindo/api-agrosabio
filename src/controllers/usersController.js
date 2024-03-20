@@ -83,7 +83,6 @@ exports.checkEmail = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
     const { email, newPassword } = req.body;
-
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -104,12 +103,40 @@ exports.updatePassword = async (req, res) => {
 };
 
 
-// Función para obtener todos los usuarios
+
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.find(); // Encuentra todos los usuarios
-        res.json(users); // Envía la lista de usuarios como respuesta
+        res.json(users); // Envía la lista 
     } catch (error) {
-        res.status(500).json({ message: error.message }); // Manejo de errores
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.updateUser = async (req, res) => {
+    //obtener el usuario y lso datos del cuerpo de solicitud
+    const {id} = req.params;
+    const updateData = req.body;
+    try {
+        const updateUser = await User.findByIdAndUpdate(id, updateData);
+        if(!updateUser){
+            return res.status(404).json({message: "Usuario no encontrado"});
+        }
+        res.json(updateUser); //enviar el usuario actualizado como respuesta
+    } catch (error) {
+        res.status(500).json({ message: error.message });   
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const user = await User.findByIdAndDelete(id);
+        if(!user){
+            return res.status(404).json({message: "Usuario no encontrado"});
+        }
+        return res.status(200).json({message: "Usuario eliminado"});
+    } catch (error) {
+        res.status(500).json({ message: error.message });  
     }
 };
