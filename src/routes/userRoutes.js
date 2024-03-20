@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { signup, signin, checkEmail, updatePassword, getAllUsers } = require('../controllers/usersController');
+const { signup, signin, checkEmail, updatePassword, getAllUsers, 
+updateUser, deleteUser
+} = require('../controllers/usersController');
 const { verifyToken } = require('../middleware/authMiddleware');
 const logger = require('../config/logger');
 
@@ -22,6 +24,10 @@ router.post('/checkEmail', checkEmail);
 router.post('/updatePassword', verifyToken, updatePassword);
 
 router.get('/allUsers', getAllUsers);
+
+router.put('/updateUser', updateUser);
+
+router.delete('/deleteUser', deleteUser);
 
 
 module.exports = router;
