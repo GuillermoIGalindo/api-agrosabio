@@ -2,14 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const connectDB = require('./config/db'); 
+const connectAPIDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes'); 
 const Role = require('./models/Role');
 const logger = require('./config/logger');
 const corsOptions = require('./config/corsOptions');
+require('dotenv').config();
 
 
-connectDB();
-
+//connectDB();
+connectAPIDB();
 // Inicialización de roles si no existen
 async function initialSetup() {
     try {
@@ -25,7 +27,8 @@ async function initialSetup() {
 }
 initialSetup();
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json()); // Para que entienda los datos que le enviamos en formato de JSON
 
 // Uso de rutas
