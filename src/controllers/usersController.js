@@ -106,7 +106,7 @@ exports.updatePassword = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find(); // Encuentra todos los usuarios
+        const users = await User.find().populate('role'); // Encuentra todos los usuarios
         res.json(users); // Envía la lista 
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -127,17 +127,22 @@ try {
 };
 
 exports.updateUser = async (req, res) => {
-    //obtener el usuario y lso datos del cuerpo de solicitud
-    const {id} = req.params;
+    const { id } = req.params;
     const updateData = req.body;
+
     try {
-        const updateUser = await User.findByIdAndUpdate(id, updateData);
-        if(!updateUser){
-            return res.status(404).json({message: "Usuario no encontrado"});
+        const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+        
+        if (!updatedUser) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
         }
-        res.json(updateUser); //enviar el usuario actualizado como respuesta
+        
+        res.json(updatedUser); // Enviar el usuario actualizado como respuesta
     } catch (error) {
-        res.status(500).json({ message: error.message });   
+        if (error.kind === 'ObjectId') {
+            return res.status(400).json({ message: "ID de usuario no válido" });
+        }
+        res.status(500).json({ message: error.message });
     }
 };
 
