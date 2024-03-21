@@ -1,17 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const connectDB = require('./config/db'); 
+const connectDB = require('./config/db'); // Se usa la misma función para conectar a la DB
 const connectAPIDB = require('./config/db');
-const userRoutes = require('./routes/userRoutes'); 
+const userRoutes = require('./routes/userRoutes');
 const Role = require('./models/Role');
 const logger = require('./config/logger');
 const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
 
-
-//connectDB();
+// Conexión a la base de datos
 connectAPIDB();
+
 // Inicialización de roles si no existen
 async function initialSetup() {
     try {
@@ -25,15 +25,32 @@ async function initialSetup() {
         logger.error('Error al inicializar roles: ' + error.message);
     }
 }
+
 initialSetup();
 
+// Configuración de CORS
 //app.use(cors(corsOptions));
 app.use(cors());
-app.use(express.json()); // Para que entienda los datos que le enviamos en formato de JSON
+// Middleware para interpretar JSON
+app.use(express.json());
 
-// Uso de rutas
-app.use('/api', userRoutes); 
+// Definición de rutas
+app.use('/api', userRoutes);
 
+// Middleware para manejar rutas no encontradas y proporcionar una ruta por defecto
+app.use((req, res, next) => {
+    // Aquí puedes manejar la ruta por defecto.
+    // Por ejemplo, redirigir al usuario a una ruta específica o devolver una respuesta por defecto.
+    res.status(404).send('La página que buscas no existe, pero aquí te redirigimos a una ruta por defecto.');
+  });
+  
+  // Otra opción es definir una ruta por defecto antes del middleware de captura.
+  // Esta ruta atendería a cualquier solicitud no capturada previamente.
+  app.use('*', (req, res) => {
+    res.send('Esta es la ruta por defecto.');
+  });
+
+// Inicio del servidor
 app.listen(3000, () => {
-    logger.info('Servidor en el puerto 3000');
+    logger.info('Servidor corriendo en el puerto 3000');
 });

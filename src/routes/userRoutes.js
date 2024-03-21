@@ -29,5 +29,8 @@ router.put('/updateUser/:id', updateUser);
 
 router.delete('/deleteUser/:id', deleteUser);
 
+router.get('/', (req, res) => {
+    res.send('Bienvenido a la API');
+  });
 
 module.exports = router;
