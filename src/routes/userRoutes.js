@@ -23,10 +23,11 @@ router.post('/updatePassword', verifyToken, updatePassword);
 
 router.get('/allUsers', getAllUsers);
 
-router.put('/updateUser', updateUser);
-
-router.delete('/deleteUser', deleteUser);
-
 router.get('/getUser', getUser);
+
+router.put('/updateUser/:id', updateUser);
+
+router.delete('/deleteUser/:id', deleteUser);
+
 
 module.exports = router;
