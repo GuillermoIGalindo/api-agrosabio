@@ -33,22 +33,24 @@ initialSetup();
 app.use(cors());
 // Middleware para interpretar JSON
 app.use(express.json());
+// Ruta de bienvenida (debes asegurarte de que esta definición sea accesible antes de definir otras rutas)
+app.get('/', (req, res) => {
+    res.send('Bienvenido a la API');
+});
 
-// Definición de rutas
+// Definición de rutas específicas
 app.use('/api', userRoutes);
 
-// Middleware para manejar rutas no encontradas y proporcionar una ruta por defecto
+// Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
-    // Aquí puedes manejar la ruta por defecto.
-    // Por ejemplo, redirigir al usuario a una ruta específica o devolver una respuesta por defecto.
     res.status(404).send('La página que buscas no existe, pero aquí te redirigimos a una ruta por defecto.');
-  });
-  
-  // Otra opción es definir una ruta por defecto antes del middleware de captura.
-  // Esta ruta atendería a cualquier solicitud no capturada previamente.
-  app.use('*', (req, res) => {
-    res.send('Esta es la ruta por defecto.');
-  });
+});
+
+// Otra opción es definir una ruta por defecto antes del middleware de captura.
+// Esta ruta atendería a cualquier solicitud no capturada previamente.
+app.use('*', (req, res) => {
+    res.redirect('/');
+});
 
 // Inicio del servidor
 app.listen(3000, () => {

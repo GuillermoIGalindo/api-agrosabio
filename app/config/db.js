@@ -19,7 +19,7 @@ const connectAPIDB = async () => {
         logger.info('Conectado a la base de datos');
     } catch (err) {
         logger.error('Error de conexión a la base de datos: ' + err.message);
-        process.exit(1); // Detiene la aplicación si no puede conectarse a la base de datos
+        //process.exit(1); // Detiene la aplicación si no puede conectarse a la base de datos
     }
 };
 
