@@ -23,7 +23,7 @@ router.post('/updatePassword', verifyToken, updatePassword);
 
 router.get('/allUsers', getAllUsers);
 
-router.get('/getUser', getUser);
+router.get('/getUser/:id', getUser);
 
 router.put('/updateUser/:id', updateUser);
 
